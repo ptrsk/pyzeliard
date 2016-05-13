@@ -1,0 +1,14 @@
+The graphics of this game are licensed for a GPL version 2 game, which is its license.
+See the README in the src/pics directory.
+
+To start the game run 'python pyzeliard.py' in the src directory.
+You need pygame installed in your python.
+The pics directory has to be found where the *.py files are (if you'd like
+to install somewhere else.)
+
+keyboard commands:
+
+arrow left and right : move left or right
+arrow up : jump, exit room on portal
+'z' key : attack
+'i' key : show character screen (inventory)
