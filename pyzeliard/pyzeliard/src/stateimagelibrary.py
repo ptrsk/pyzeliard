@@ -1,3 +1,4 @@
+# -*- coding: cp949 -*-
 #!/usr/local/bin/python
 # Copyright (C) Johan Ceuppens 2015
 # Copyright (C) Johan Ceuppens 2010
@@ -14,24 +15,55 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from time import *
+from pygame.time import delay
+
 class Stateimagelibrary:
     def __init__(self):
-	self.index = 0
-	self.max = 0
-	self.list = []
+        self.index = 0
+        self.max = 0
+        self.list = []
+    
     def addpicture(self, image):
-	self.list.append(image)
-	self.max += 1
+        self.list.append(image)
+        self.max += 1
 
     def drawstatic(self, screen, xx, yy, index):
-	if (self.index >= self.max):
+        """
+        특정 동작
+        """
+        if (self.index >= self.max):
             self.index = 0
 
-	screen.blit(self.list[index],(xx,yy)) 
+        screen.blit(self.list[index],(xx,yy)) 
+
+    def drawstatic(self, screen, xx, yy):
+        """
+        멈춤 동작
+        """
+        if (self.index >= self.max):
+            self.index = 0
+
+        screen.blit(self.list[self.index],(xx,yy)) 
 
     def draw(self, screen, xx, yy):
-	if (self.index >= self.max):
+        """
+        연속 동작 - 안씀
+        """
+        if (self.index >= self.max):
             self.index = 0
 
-	screen.blit(self.list[self.index],(xx,yy)) 
-	self.index += 1	
+        screen.blit(self.list[self.index],(xx,yy)) 
+        self.index += 1
+        sleep(0.1)
+
+    def draw(self, screen, xx, yy, delay_time):
+        """
+        연속 동작 지연시간포함됨.
+        """
+        if (self.index >= self.max):
+            self.index = 0
+
+        screen.blit(self.list[self.index],(xx,yy)) 
+        self.index += 1
+        sleep(delay_time)

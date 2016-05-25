@@ -19,6 +19,8 @@ import sys
 
 import pygame
 from pygame.locals import *
+import pyganim
+
 
 import random
 from time import *
@@ -34,19 +36,30 @@ from maproomfortunetellerbosque import *
 from maproombankbosque import *
 from maproomcavernofmalicia import *
 
+
 class Game:
     "Main function"
     def __init__(self):
 
+        """
+        initialize program
+        """
+        
+        pygame.init()
+        pygame.font.init()
+        
+        # set up the window
+        self.screen = pygame.display.set_mode((640, 400)) #윈도우 크기 설정 
+        #self.screen = pygame.display.set_mode((640, 400), 0, 32) #윈도우 크기 설정
+        #self.screen = pygame.display.set_mode((800, 600)) #윈도우 크기 설정
         # 1) 화면 해상도를 480*320으로 초기화. 윈도우 모드, 더블 버퍼 모드로 초기화하는 경우
         #self.screen = pygame.display.set_mode((480, 320), DOUBLEBUF)
         
         # 2) 화면 해상도를 480*320, 전체 화면 모드, 하드웨어 가속 사용, 더블 버퍼 모드로 초기화하는 경우
         #self.screen = pygame.display.set_mode((480, 320), FULLSCREEN | HWSURFACE | DOUBLEBUF)
 
-        pygame.init()
-        pygame.font.init()
-        self.screen = pygame.display.set_mode((640, 400)) #윈도우 
+        pygame.display.set_caption('Zeliard') #window title
+        
         self.font = pygame.font.SysFont("Times", 14) # 타임 폰트
         self.font2 = pygame.font.SysFont("Coutier", 28) #코우티어 폰트
         self.font3 = pygame.font.SysFont("Vera", 52) #베라 폰트
@@ -54,10 +67,11 @@ class Game:
         titleimage = pygame.image.load('./pics/titlescreen.png').convert() # 로고 화면 
         gameover = False # 게임종료여부 -- 0:게임 안끊남. 1: 끝남
         
-        ######################
-        # 로고화면띄우기
-        ######################
-        print("로고화면")
+        """
+        run logo
+        로고화면띄우기
+        """
+        #print("로고화면")
         while gameover == False:
             pygame.display.update()#화면갱신
             self.screen.blit(titleimage, (0,0)) #로고화면 출력
@@ -70,11 +84,12 @@ class Game:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     gameover = True # 다음넘어가기
 
-        ######################
-        # 게임 진행 : 준비
-        ######################
+        """
+        initialize game
+        게임 진행 초기화 
+        """
         
-        print("게임진행화면")
+        #print("게임진행화면")
         self.meter = Meter() #생명줄 생성
         pygame.key.set_repeat(10,100) #??? (지연, 간격)
         ####pygame.key.set_repeat(1000,1000)
@@ -84,11 +99,12 @@ class Game:
         self.y = 0
 
         #self.player = Player(280,252)# 플레이어 위치 (X축, Y축) --화면 중앙에서 얼마나 치우쳐졌는지 확인 화면중앙에서 멀어짐
-        self.player = Player(280,240)# 플레이어 위치 (X축, Y축) --화면 중앙에서 얼마나 치우쳐졌는지 확인 화면중앙에서 멀어짐
+        self.player = Player(280,236)# 플레이어 위치 (X축, Y축) --화면 중앙에서 얼마나 치우쳐졌는지 확인 화면중앙에서 멀어짐
         #self.player = Player(280,199) #-- 이건 원래것
 
         # 마을 로딩
-        self.room = MaproomBosqueVillage(-700,0,2000,400) #현재는 보스크마을 등록
+        self.room = MaproomBosqueVillage(-700,0,3312,288) #현재는 보스크마을 등록 x축, y축, 가로크기, 세로크기
+        #self.room = MaproomBosqueVillage(-700,0,2000,400) #현재는 보스크마을 등록
         ###self.room = MaproomCavernofMalicia(0,0,2000,400)
         ###self.room = MaproomweaponstoreBosque()
         ###self.room = MaproomfortunetellerBosque()
@@ -98,7 +114,7 @@ class Game:
         self.locationtext = self.room.locationtext # 방이름 입력
         self.roomnumber = self.room.roomnumber #방번호 입력 
  
-        self.bgoverlay = BGOverlay(0,0) # 배경 오버레이를 의미하는듯한데 뭔지모르겠음
+        self.bgoverlay = BGOverlay(0,0) # 전면배경 경계면
         self.taskbar = Taskbar(self.screen, self.font2, self.player) # 작업표시줄 보이기. screen, font, player
         self.characterscreen = CharacterScreen(self.font) # 인벤토리창
 
@@ -174,20 +190,25 @@ class Game:
                         #FIXME keydown = 2
                         #self.room.moveup()    
                     elif event.key == K_RIGHT:
-                        self.room.moveright()
+                        self.room.moveright() # 마을을 이동시키기
                         self.room.direction = "left"
                         self.player.direction = self.player.RIGHT 
-                        print("마을 왼쪽이동,플레이어 오른쪽달리기")
-                        print(self.player.x, self.player.y) #캐릭터는 항상 중앙에 있다. 그래서 바뀌지않음.
-                        print(self.room.relativey, self.room.relativex)
+                        self.player.state = self.player.STATE_WALK
+                        
+                        ##print("마을 왼쪽이동,플레이어 오른쪽달리기")
+                        #print(self.player.x, self.player.y) #캐릭터는 항상 중앙에 있다. 그래서 바뀌지않음.
+                        #print(self.room.relativey, self.room.relativex)
                         
                     elif event.key == K_LEFT:
                         self.room.moveleft()
                         self.room.direction = "right"
                         self.player.direction = self.player.LEFT
-                        print("마을오른쪽이동,플레이어 왼쪽달리기")
-                        print(self.room.relativey, self.room.relativex)
-                        #print(self.x,self.y) 이건아니다. 
+                        self.player.state = self.player.STATE_WALK
+                         
+                        #print("마을오른쪽이동,플레이어 왼쪽달리기")
+                        #print(self.room.relativey, self.room.relativex)
+                        #print(self.x,self.y) 이건아니다.
+                         
                     elif event.key == K_UP:
                         self.locationtext = self.room.exit(self)
                         self.chooseroom(self.locationtext, self.font) #점프한데가 혹시 문으로 들어가는곳인가?
@@ -240,6 +261,7 @@ class Game:
 
                                         pygame.display.update()
                                         self.screen.blit(blankimage, (0,0))
+                                        
 
                         ########################################
                         # 점프했는데 로프가없을때 -> 그냥점프
@@ -250,6 +272,12 @@ class Game:
                             self.player.jump(self.room) # 점프함 #버그: 땅을 안밟아도 점프됨
                             #sys.exit()
                             #sleep(1)
+
+                elif event.type == KEYUP:
+                    """
+                    키가 떼이면 그냥 서있는 자세이어야함
+                    """
+                    self.player.state = self.player.STATE_STAND
 
             if self.room.collide(self.player) == 1 or self.player.hitpoints <= 0:
                 print "game over!"
@@ -270,6 +298,8 @@ class Game:
             
             pygame.display.update()
             self.screen.blit(blankimage, (0,0))
+            #print "상태" , self.player.state
+
 
     # 지금은 안쓰는듯            
     def setxy(self,xx,yy):
@@ -354,9 +384,11 @@ class Game:
                         self.keydown = 1
                         # self.player 1 key controls
                         if event.key == K_UP:
-                            self.room.selectorup(); print("키업")
+                            self.room.selectorup(); 
+                            print("키업")
                         elif event.key == K_DOWN:
-                            self.room.selectordown(); print("키다운")	
+                            self.room.selectordown(); 
+                            print("키다운")	
                         elif event.key == K_z:
                             self.adapter = self.room.select(self.room)
                             self.manipulateroom(self.adapter)

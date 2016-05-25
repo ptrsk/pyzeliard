@@ -18,6 +18,8 @@
 
 import pygame
 from pygame.locals import *
+import pyganim
+
 import random 
 import math 
 from rng import *
@@ -48,18 +50,74 @@ class Player:
 
         self.rng = RNG(self)
 
+        # enum 처럼 사용함.
+        self.STATE_STAND = 0
+        self.STATE_WALK = 1
+        self.STATE_RUN = 2
+        self.STATE_SIT = 3
+        self.STATE_JUMP = 4
+        self.STATE_DIE = 5
+        
+        self.walk_rate = 0.05 # 걷기 처리 속도
+        #initialize
+        self.state = self.STATE_STAND
+        
+        #=======================================================================
+        # player image loading
+        #=======================================================================
         # 왼쪽 서있는 이미지
         self.stimlibleft = Stateimagelibrary()
-        image = pygame.image.load('./pics/player-left-1.png').convert()
+        #image = pygame.image.load('./pics/player-left-1.png').convert() #old
+        image = pygame.image.load('./images/duke_walk_left_0.png').convert()
         image.set_colorkey((0,0,0))
         self.stimlibleft.addpicture(image)
 
+        image = pygame.image.load('./images/duke_walk_left_1.png').convert()
+        image.set_colorkey((0,0,0))
+        self.stimlibleft.addpicture(image)
+
+        image = pygame.image.load('./images/duke_walk_left_2.png').convert()
+        image.set_colorkey((0,0,0))
+        self.stimlibleft.addpicture(image)
+
+        image = pygame.image.load('./images/duke_walk_left_3.png').convert()
+        image.set_colorkey((0,0,0))
+        self.stimlibleft.addpicture(image)
+
+
         # 오른쪽 서있는 이미지
         self.stimlibright = Stateimagelibrary()
-        image = pygame.image.load('./pics/player-right-1.png').convert()
+        #image = pygame.image.load('./pics/player-right-1.png').convert() #old
+        image = pygame.image.load('./images/duke_walk_right_0.png').convert() # path ./ or not -> same
         image.set_colorkey((0,0,0))
         self.stimlibright.addpicture(image)
 
+        image = pygame.image.load('./images/duke_walk_right_1.png').convert()
+        image.set_colorkey((0,0,0))
+        self.stimlibright.addpicture(image)
+
+        image = pygame.image.load('./images/duke_walk_right_2.png').convert()
+        image.set_colorkey((0,0,0))
+        self.stimlibright.addpicture(image)
+        
+        image = pygame.image.load('./images/duke_walk_right_3.png').convert()
+        image.set_colorkey((0,0,0))
+        self.stimlibright.addpicture(image)
+
+        ##################
+        # image loading
+        # 애니메이션을 사용하기위해서 통합함. pyganim라이브러리 사용
+        # creating the PygAnimation objects for walking/running in all directions
+        animTypes = 'walk_left walk_right'.split()
+        #animTypes = 'walk_right walk_left run_right run_left jump_left jump_right fight_left fight_right'.split()
+        self.animObjs = {}
+        for animType in animTypes:
+            imagesAndDurations = [('./images/duke_%s_%s.png' % (animType, str(num).rjust(1, '0')), 0.1) for num in range(4)]
+            self.animObjs[animType] = pyganim.PygAnimation(imagesAndDurations)
+        
+        self.moveConductor = pyganim.PygConductor(self.animObjs) # 정지 재생 여부
+        ##################
+        
         # 벽타는 이미지
         self.stimlibclimbing = Stateimagelibrary() 
         image = pygame.image.load('./pics/player-climb1-30x70.png').convert()
@@ -99,7 +157,7 @@ class Player:
         image.set_colorkey((0,0,0))
         self.stimlibrightfight.addpicture(image)
 
-        self.direction = self.LEFT 
+        self.direction = self.RIGHT 
         # se this to 10 and it draws an attack picture loop
         self.fightcounter = 0
  
@@ -107,6 +165,11 @@ class Player:
         return self.rng
  
     def draw(self, screen, room):
+
+        """
+        싸움하려는 키가 눌러졌을때 (fightcounter)
+        싸움장면 그림
+        """
         if self.fightcounter > 0:
             self.fightcounter -= 1
             if self.direction == self.LEFT:
@@ -115,11 +178,38 @@ class Player:
                 self.stimlibrightfight.draw(screen, self.x,self.y) 
             return
 
-        if self.direction == self.LEFT:
-            self.stimlibleft.draw(screen, self.x,self.y) 
-        elif self.direction == self.RIGHT:
-            self.stimlibright.draw(screen, self.x,self.y) 
+        """
+        Standing
+        """
+        if self.state == self.STATE_STAND :
+            if self.direction == self.LEFT:
+                self.moveConductor.stop()
+                self.stimlibleft.drawstatic(screen, self.x,self.y)
+            elif self.direction == self.RIGHT:
+                self.stimlibright.drawstatic(screen, self.x,self.y) 
 
+        """
+        Walking
+        """
+        if self.state == self.STATE_WALK :
+            if self.direction == self.LEFT:
+                self.moveConductor.play()
+                self.stimlibleft.draw(screen, self.x,self.y, self.walk_rate)
+            elif self.direction == self.RIGHT:
+                self.stimlibright.draw(screen, self.x,self.y, self.walk_rate) 
+
+        """
+        Running
+        """
+        if self.state == self.STATE_RUN :
+            if self.direction == self.LEFT:
+                self.moveConductor.play()
+                self.stimlibleft.draw(screen, self.x,self.y, self.walk_rate)
+                #self.animObjs['walk_left'].draw(screen, (self.x,self.y-4)) #error
+                #self.animObjs['walk_left'].blit(screen, (self.x, self.y)) # 잘못됨
+            elif self.direction == self.RIGHT:
+                self.stimlibright.draw(screen, self.x,self.y, self.walk_rate) 
+            
     def drawclimbing(self, screen, room):
         self.stimlibclimbing.draw(screen, self.x,self.y) 
 
@@ -154,7 +244,7 @@ class Player:
             #print "하강 또는 착지상태"
             self.jumpcounter = 0
             
-        print "room.relativey", room.relativey, "self.jumpcounter",self.jumpcounter
+        #print "room.relativey", room.relativey, "self.jumpcounter",self.jumpcounter
 
     def fight(self,room,player,sword):
         self.sword = sword

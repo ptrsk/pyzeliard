@@ -26,17 +26,23 @@ from ropeellips import *
 from ropesinus import *
 
 #보스크 마을에대한 정의를 함
+#배경, 상점위치, 등.. 
+#Todo: NPC 처리, 대화, 이벤트처리
 class MaproomBosqueVillage(Maproomvillage):
     "Dungeon"
 
-    # 마을을 등록함
+    # 보스크 마을내에 어디쯤에 뭐가 있는지를 기술했음.
     # xx : x값
     # yy : y값
     # ww : 폭
     # hh : 높이
     def __init__(self, xx,yy,ww,hh):
-        Maproomvillage.__init__(self,xx,yy,ww,hh)
-        self.bgimage = pygame.image.load('./pics/bg-bosquevillage-1.png') # 마을 배경 넣기
+        
+        Maproomvillage.__init__(self,xx,yy,ww,hh) # 마을설정
+        self.fgimage = pygame.image.load('./pics/bg-bosquevillage-1.png') # 마을 배경 넣기
+        
+        self.bgimage = pygame.image.load('./pics/bg-mountain.png') # 산 이미지
+        
         #self.locationtext = "보스크Bosque".encode('cp949') # 마을이름  문제점: 한글출력은 안된다.
         self.locationtext = "보스크" # 마을이름  문제점: 한글출력은 안된다.
         self.roomnumber = 1

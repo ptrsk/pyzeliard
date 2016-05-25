@@ -27,7 +27,8 @@ class Maproombase:
         self.relativey = yy
         self.w = ww
         self.h = hh
-        self.bgimage = None #배경 이미지
+        self.bgimage = None #background image
+        self.fgimage = None #foreground image
         self.gameobjects = [] #배열로 처리?
         self.roofs = []
         self.ropes = []
@@ -51,12 +52,19 @@ class Maproombase:
         	return 0
 
     def draw(self, screen, player,taskbar):
-		### print "relx=%d rely=%d" % (self.relativex, self.relativey)
-		screen.blit(self.bgimage, (self.relativex, self.relativey+25))
-		for go in self.gameobjects:
-			go.draw(screen,self)
-		for r in self.ropes:
-			r.draw(screen,self)
+        """
+        auto call
+        """
+        ### print "relx=%d rely=%d" % (self.relativex, self.relativey)
+        x= 0 # 좌측 석상의 폭이 95임 set 96
+        y= 26 # 상단 돌의 폭이 25임 set 26
+        screen.blit(self.bgimage, (x,y))
+        screen.blit(self.fgimage, (self.relativex, self.relativey+28))
+        
+        for go in self.gameobjects:
+            go.draw(screen,self)
+        for r in self.ropes:
+            r.draw(screen,self)
 
     def moveleft(self):
 		self.relativex += self.playerdx 
