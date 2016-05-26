@@ -58,14 +58,14 @@ class Player:
         self.STATE_JUMP = 4
         self.STATE_DIE = 5
         
-        self.walk_rate = 0.05 # 걷기 처리 속도
+        self.walk_rate = 0.01 # 걷기 이미지 속도 
         #initialize
         self.state = self.STATE_STAND
         
         #=======================================================================
         # player image loading
         #=======================================================================
-        # 왼쪽 서있는 이미지
+        """
         self.stimlibleft = Stateimagelibrary()
         #image = pygame.image.load('./pics/player-left-1.png').convert() #old
         image = pygame.image.load('./images/duke_walk_left_0.png').convert()
@@ -83,11 +83,12 @@ class Player:
         image = pygame.image.load('./images/duke_walk_left_3.png').convert()
         image.set_colorkey((0,0,0))
         self.stimlibleft.addpicture(image)
-
+        """
 
         # 오른쪽 서있는 이미지
-        self.stimlibright = Stateimagelibrary()
+        #self.stimlibright = Stateimagelibrary()
         #image = pygame.image.load('./pics/player-right-1.png').convert() #old
+        """
         image = pygame.image.load('./images/duke_walk_right_0.png').convert() # path ./ or not -> same
         image.set_colorkey((0,0,0))
         self.stimlibright.addpicture(image)
@@ -103,19 +104,26 @@ class Player:
         image = pygame.image.load('./images/duke_walk_right_3.png').convert()
         image.set_colorkey((0,0,0))
         self.stimlibright.addpicture(image)
+"""
 
         ##################
         # image loading
         # 애니메이션을 사용하기위해서 통합함. pyganim라이브러리 사용
         # creating the PygAnimation objects for walking/running in all directions
-        animTypes = 'walk_left walk_right'.split()
+        animTypes = 'walk_left'.split() #현재 존재하는 그림만 추가할것
         #animTypes = 'walk_right walk_left run_right run_left jump_left jump_right fight_left fight_right'.split()
         self.animObjs = {}
         for animType in animTypes:
-            imagesAndDurations = [('./images/duke_%s_%s.png' % (animType, str(num).rjust(1, '0')), 0.1) for num in range(4)]
-            self.animObjs[animType] = pyganim.PygAnimation(imagesAndDurations)
+            imagesAndDurations = [('./images/duke_%s_%s.png' % (animType, str(num).rjust(1, '0')), 0.09) for num in range(4)]
+            self.animObjs[animType] = pyganim.PygAnimation(imagesAndDurations)#이미지 불러오기
         
         self.moveConductor = pyganim.PygConductor(self.animObjs) # 정지 재생 여부
+        
+        #오른쪽 서있는 장면은 복사할것
+        self.animObjs['walk_right'] = self.animObjs['walk_left'].getCopy() # 이미지 복사
+        self.animObjs['walk_right'].flip(True, False)
+        self.animObjs['walk_right'].makeTransformsPermanent()
+
         ##################
         
         # 벽타는 이미지
@@ -157,7 +165,8 @@ class Player:
         image.set_colorkey((0,0,0))
         self.stimlibrightfight.addpicture(image)
 
-        self.direction = self.RIGHT 
+        # 값초기화 
+        self.direction = self.RIGHT #오른쪽방향보고있을것 
         # se this to 10 and it draws an attack picture loop
         self.fightcounter = 0
  
@@ -182,21 +191,25 @@ class Player:
         Standing
         """
         if self.state == self.STATE_STAND :
+            self.moveConductor.pause()
             if self.direction == self.LEFT:
-                self.moveConductor.stop()
-                self.stimlibleft.drawstatic(screen, self.x,self.y)
+                self.animObjs['walk_left'].blit(screen, (self.x, self.y)) # 잘못됨
+                ##self.stimlibleft.drawstatic(screen, self.x,self.y)
             elif self.direction == self.RIGHT:
-                self.stimlibright.drawstatic(screen, self.x,self.y) 
+                #self.stimlibright.drawstatic(screen, self.x,self.y) 
+                self.animObjs['walk_right'].blit(screen, (self.x, self.y)) # 잘못됨
 
         """
         Walking
         """
         if self.state == self.STATE_WALK :
+            self.moveConductor.play()            
             if self.direction == self.LEFT:
-                self.moveConductor.play()
-                self.stimlibleft.draw(screen, self.x,self.y, self.walk_rate)
+                #self.stimlibleft.draw(screen, self.x,self.y, self.walk_rate)
+                self.animObjs['walk_left'].blit(screen, (self.x, self.y)) # 잘못됨
             elif self.direction == self.RIGHT:
-                self.stimlibright.draw(screen, self.x,self.y, self.walk_rate) 
+                #self.stimlibright.draw(screen, self.x,self.y, self.walk_rate) 
+                self.animObjs['walk_right'].blit(screen, (self.x, self.y)) # 잘못됨
 
         """
         Running

@@ -39,9 +39,9 @@ class MaproomBosqueVillage(Maproomvillage):
     def __init__(self, xx,yy,ww,hh):
         
         Maproomvillage.__init__(self,xx,yy,ww,hh) # 마을설정
-        self.fgimage = pygame.image.load('./pics/bg-bosquevillage-1.png') # 마을 배경 넣기
+        self.fgimage = pygame.image.load('./images/bg-bosquevillage.png') # 마을 배경 넣기
         
-        self.bgimage = pygame.image.load('./pics/bg-mountain.png') # 산 이미지
+        self.bgimage = pygame.image.load('./images/bg-mountain.png') # 산 이미지
         
         #self.locationtext = "보스크Bosque".encode('cp949') # 마을이름  문제점: 한글출력은 안된다.
         self.locationtext = "보스크" # 마을이름  문제점: 한글출력은 안된다.

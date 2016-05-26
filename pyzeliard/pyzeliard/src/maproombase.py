@@ -34,7 +34,7 @@ class Maproombase:
         self.ropes = []
         self.exits = [] # 출구 위치
         
-        self.playerdx = 6
+        self.playerdx = 16 # 캐릭터 속도??
 
     def collideundomove(self,room,player):
 		flag = 0

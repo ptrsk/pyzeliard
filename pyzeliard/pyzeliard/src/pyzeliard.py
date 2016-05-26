@@ -278,6 +278,7 @@ class Game:
                     키가 떼이면 그냥 서있는 자세이어야함
                     """
                     self.player.state = self.player.STATE_STAND
+                    
 
             if self.room.collide(self.player) == 1 or self.player.hitpoints <= 0:
                 print "game over!"
