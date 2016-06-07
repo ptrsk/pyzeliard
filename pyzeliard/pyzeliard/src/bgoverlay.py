@@ -23,8 +23,8 @@ from pygame.locals import *
 class BGOverlay:
     ""
     def __init__(self, xx,yy):
-        	self.x = xx
-        	self.y = yy
+        	self.x = xx # no use
+        	self.y = yy # no use
 
         	self.middleimage = pygame.image.load('./pics/statue-middle.png').convert()
         	self.middleimage.set_colorkey((255,255,255)) 

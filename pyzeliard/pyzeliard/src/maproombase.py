@@ -1,4 +1,4 @@
-# -*- coding: cp949 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) Johan Ceuppens 2015
 # Copyright (C) Johan Ceuppens 2014 
 # Copyright (C) Johan Ceuppens 2010 
@@ -27,93 +27,114 @@ class Maproombase:
         self.relativey = yy
         self.w = ww
         self.h = hh
-        self.bgimage = None #background image
-        self.fgimage = None #foreground image
-        self.gameobjects = [] #¹è¿­·Î Ã³¸®?
+        self.bgimage = None  # background image
+        self.fgimage = None  # foreground image
+        self.ground_back_image = None  # foreground image
+        self.ground_front_image = None  # foreground image
+        self.bank_image = None  # Bank Image
+        self.gameobjects = []  # ë°°ì—´ë¡œ ì²˜ë¦¬?
         self.roofs = []
         self.ropes = []
-        self.exits = [] # Ãâ±¸ À§Ä¡
+        self.exits = []  # ì¶œêµ¬ ìœ„ì¹˜
         
-        self.playerdx = 16 # Ä³¸¯ÅÍ ¼Óµµ??
+        self.playerdx = 16  # ìºë¦­í„° ì†ë„??
 
     def collideundomove(self,room,player):
-		flag = 0
-        	for i in self.gameobjects:
-	    		if i:
-	    			obj = i.collideundomove(room,player)
-				if obj:
-					for j in self.gameobjects:
-						if j:
-							k = j.collideundomove(room,player)
-							if k != obj:
-								flag += 1
-					if flag == 0:
-						return 1	
-        	return 0
+        flag = 0
+        for i in self.gameobjects:
+            if i:
+                obj = i.collideundomove(room,player)
+            if obj:
+                for j in self.gameobjects:
+                    if j:
+                        k = j.collideundomove(room,player)
+                        if k != obj:
+                            flag += 1
+                if flag == 0:
+                    return 1
+        return 0
 
-    def draw(self, screen, player,taskbar):
+    def draw(self, screen, player, taskbar):
         """
-        auto call
+        draw room's bacground, foreground, land, etc.
         """
+        print "Maproombase Draw"
         ### print "relx=%d rely=%d" % (self.relativex, self.relativey)
-        x= 0 # ÁÂÃø ¼®»óÀÇ ÆøÀÌ 95ÀÓ set 96
-        y= 26 # »ó´Ü µ¹ÀÇ ÆøÀÌ 25ÀÓ set 26
+        x= 0 # ì¢Œì¸¡ ì„ìƒì˜ í­ì´ 95ì„ set 96
+        y= 26 # ìƒë‹¨ ëŒì˜ í­ì´ 25ì„ set 26
         screen.blit(self.bgimage, (x,y))
-        screen.blit(self.fgimage, (self.relativex, self.relativey+28))
-        
+        #screen.blit(self.fgimage, (self.relativex, self.relativey+28))
+        # ë°˜ë³µí•´ì„œ ì°ì„ê²ƒ
+        ##screen.blit(self.ground_back_image, (self.relativex, self.relativey + 284))
+        """
+        for i in range (0,10):
+            screen.blit(self.ground_back_image, (self.relativex+(self.ground_back_image.get_width() * i+1), self.relativey+ 284))
+        #screen.blit(self.ground_front_image, (self.relativex, self.relativey + 299))
+        for i in range(0, 10):
+            #screen.blit(self.ground_front_image, (self.ground_front_image.get_width() * i+1, self.relativey + 299))
+            screen.blit(self.ground_front_image, (self.relativex+(self.ground_front_image.get_width() * i+1), self.relativey + 299))
+        """
         for go in self.gameobjects:
             go.draw(screen,self)
         for r in self.ropes:
             r.draw(screen,self)
 
     def moveleft(self):
-		self.relativex += self.playerdx 
+        self.relativex += self.playerdx
+        #if self.gameobjects
+        #print self.relativex,  self.playerdx
 
     def moveright(self):
-		self.relativex -= self.playerdx
+        self.relativex -= self.playerdx
 
-    # °´Ã¼°¡ Á¡ÇÁÇÏ´Â ¼Óµµ
+    # ê°ì²´ê°€ ì í”„í•˜ëŠ” ì†ë„
     def moveup(self):
         self.relativey += 10
         #self.relativey += 3
 
-    # °´Ã¼°¡ ¶³¾îÁö´Â ¼Óµµ
-    # NOTE : ÀÌ¼Óµµ´Â pyzeliard.py ÆÄÀÏ¿¡¼­ self.player = Player(280,240)¿¡ ¿µÇâÀ» ÁÜ
-    # ±×·¯´Ï µÑ´Ù ¸ÂÃç¾ßÇÑ´Ù. ¾È¸ÂÃß¸é Ä³¸¯ÅÍ°¡ ¶¥À¸·Î ²¨Á®¹ö¸°´Ù.
+    # ê°ì²´ê°€ ë–¨ì–´ì§€ëŠ” ì†ë„
+    # NOTE : ì´ì†ë„ëŠ” pyzeliard.py íŒŒì¼ì—ì„œ self.player = Player(280,240)ì— ì˜í–¥ì„ ì¤Œ
+    # ê·¸ëŸ¬ë‹ˆ ë‘˜ë‹¤ ë§ì¶°ì•¼í•œë‹¤. ì•ˆë§ì¶”ë©´ ìºë¦­í„°ê°€ ë•…ìœ¼ë¡œ êº¼ì ¸ë²„ë¦°ë‹¤.
     def movedown(self):
         self.relativey -= 10
         #self.relativey -= 3
 
-    #Ä³¸¯ÅÍ Áß·Â»óÅÂ À¯Áö Æò»ó½Ã¿¡µµ À¯ÁöµÊ.
-    # ¹İÈ¯°ª 
-    # 2 : ¹Ù´Ú¿¡ ÀÖÀ»¶§
-    # 0: ¾ğÁ¨Áö ¸ğ¸£°ÚÀ½ 
     def fall(self, player):
-        self.movedown() # »ó´ëÀû YÃàÀ» -3´©Àû
+        #ìºë¦­í„° ì¤‘ë ¥ìƒíƒœ ìœ ì§€ í‰ìƒì‹œì—ë„ ìœ ì§€ë¨.
+        # ë°˜í™˜ê°’ 
+        # 2 : ë°”ë‹¥ì— ìˆì„ë•Œ
+        # 0: ì–¸ì  ì§€ ëª¨ë¥´ê² ìŒ 
+
+        self.movedown() # ìƒëŒ€ì  Yì¶•ì„ -3ëˆ„ì 
         #self.relativey -= 3
         #print(self.relativey)
 
         for i in self.gameobjects:
-            if i != None and i.fallcollide(self, player)==True: # ÂøÁö»óÅÂ
-                self.moveup() # self.relativey °ªÀ» 0À¸·Î À¯ÁöÇÏ±âÀ§ÇÑµí
-                #print"2¹İÈ¯" 
+            if i != None and i.fallcollide(self, player)==True: # ì°©ì§€ìƒíƒœ
+                self.moveup() # self.relativey ê°’ì„ 0ìœ¼ë¡œ ìœ ì§€í•˜ê¸°ìœ„í•œë“¯
+                #print "movedown() 2ë°˜í™˜"
+                # ì°©ì§€ê°€ ë˜‘ë°”ë¡œ ì•ˆë˜ì„œ ì•„ë˜ì½”ë“œ ì‚½ì…í•¨
+                if self.relativey > -10 :
+                    self.relativey = 0
             return 2 # 1 kills game
-    
-        print"gameobject °¡ ¾øÀ»¶§ "
-        return 0 # ÀÌ°Å Å»ÀÏÀÌ ÀÖ´Â°Ç°¡?
+        
+        # ì´í•˜ëŠ” ë•…ì´ ì—†ì„ë•Œì„ ê³„ì† ë–¨ì–´ì§. -ì €ê°ì²´ë¥¼ ìƒëµí•˜ë‹ˆ ê³„ì† ì¶”ë½í•¨. 
+        #self.gameobjects.append(Box(0,300,2000,12)) # xx,yy,ww,hh ìœ¼ë¡œ ì €ì¥ë¨. #ë•…?
+        print"gameobject ê°€ ì—†ì„ë•Œ"
+        return 0 
 
     def collide(self, player):
         for go in self.gameobjects:
             go.collide(self,player)
 
     def collideropes(self, player):
-		for r in self.ropes:
-			if r.collide(self,player):
-				return 1
-		return 0
+        for r in self.ropes:
+            if r.collide(self,player):
+                return 1
+        return 0
 
     def update(self, player):
-		1
+        1
 
     def exit(self, game):
-		return 0	
+        return 0

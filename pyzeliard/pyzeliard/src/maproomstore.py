@@ -1,5 +1,4 @@
-
-# Copyright (C) Johan Ceuppens 2015 
+# Copyright (C) Johan Ceuppens 2015
 # Copyright (C) Johan Ceuppens 2014 
 # Copyright (C) Johan Ceuppens 2010 
 # This program is free software: you can redistribute it and/or modify
@@ -21,15 +20,18 @@ from pygame.locals import *
 from maproombase import *
 from widgettree import *
 
+
 class Maproomstore(Maproombase):
     "Store"
+
     def __init__(self):
-	Maproombase.__init__(self,0,0,640,400)	
-	self.widgettree = Widgettree()
+        Maproombase.__init__(self, 0, 0, 640, 400) # 구지 호출할필요는 없을듯
+        self.widgettree = Widgettree()
 
     def fight(self, player):
-	pass	
+        pass
 
-    def draw(self, screen, room,taskbar):
-	Maproombase.draw(self,screen,room,taskbar)
-	self.widgettree.draw(screen, room)
+    def draw(self, screen, room, taskbar):
+        print "Maproomstore(Maproombase): Draw"
+        Maproombase.draw(self, screen, room, taskbar)
+        self.widgettree.draw(screen, room)

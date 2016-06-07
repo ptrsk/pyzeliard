@@ -1,4 +1,4 @@
-# -*- coding: cp949 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) Johan Ceuppens 2015 
 # Copyright (C) Johan Ceuppens 2010 
 # This program is free software: you can redistribute it and/or modify
@@ -18,42 +18,60 @@
 import pygame
 from pygame.locals import *
 from shortsword import *
+from color import *
 
-#ÇÏ´ÜÀÇ »óÅÂÇ¥½ÃÁÙ
+
+# í•˜ë‹¨ì˜ ìƒíƒœí‘œì‹œì¤„
 class Taskbar:
     "Taskbar"
-    
-    # »óÅÂÃ¢
+
+    # ìƒíƒœì°½
     # screen :
-    # font : ÆùÆ®
+    # font : í°íŠ¸
     # player :
     def __init__(self, screen, font, player):
-        self.screen = screen	
+        self.screen = screen
         self.font = font
         self.player = player
-        
-        #Ä® ÀÌ¹ÌÁö
-        self.swordimage = pygame.image.load('./pics/sword1-40x38.png').convert() # Ä®¸ğ¾ç
-        self.swordimage.set_colorkey((255,0,255)) #º¸¶ó»ö?
-        self.sword = ShortSword(384,341,40,38)
 
-        self.image = pygame.image.load('./pics/taskbar.png').convert() # »óÅÂÃ¢
-        self.image.set_colorkey((255,0,0)) # »¡°£»ö
+        # ì¹¼ ì´ë¯¸ì§€
+        self.swordimage = pygame.image.load('./pics/sword1-40x38.png').convert()  # ì¹¼ëª¨ì–‘
+        self.swordimage.set_colorkey(Colors.PURPLE)  # ë³´ë¼ìƒ‰?
+        self.sword = ShortSword(384, 341, 40, 38)
 
-        self.goldnumber = 0 # µ·ÃÊ±âÈ­
-        self.almasnumber = 0 # ¾Ë¸¶½º ÃÊ±âÈ­
+        self.image = pygame.image.load('./pics/taskbar.png').convert()  # ìƒíƒœì°½
+        self.image.set_colorkey(Colors.RED)  # ë¹¨ê°„ìƒ‰
 
-    def draw(self,game):
+        self.goldnumber = 0  # ëˆì´ˆê¸°í™”
+        self.almasnumber = 0  # ì•Œë§ˆìŠ¤ ì´ˆê¸°í™”
+
+    def draw(self, game):
+        # TODO: ë‚˜ì¤‘ì—” ê·¸ëƒ¥ ì „ë¶€ ê·¸ë¦´ê²ƒ
+        pygame.draw.rect(game.screen, Colors.WHITE, (96, 316, 744, 2)) # í°ìƒ‰ê²½ê³„ì„ 
+        pygame.draw.rect(game.screen, Colors.GRAY, (96, 318, 744, 138)) # ë°°ê²½ìƒ‰
         game.screen.blit(self.image, (70, 310))
+
+        game.screen.blit(self.font.render(u'LIFE', True, Colors.TITLE), (105, 325))
+
         game.screen.blit(self.sword.image, (self.sword.x, self.sword.y))
-        game.screen.blit(self.font.render(game.room.locationtext, 6, (255,255,255)), (200,348))
-        game.screen.blit(self.font.render(str(self.goldnumber), 6, (255,255,255)), (190,372))
-        game.screen.blit(self.font.render(str(self.almasnumber), 6, (255,255,255)), (310,372))
 
-    def drawlocationtext(self,text):
-        self.screen.blit(self.font.render(text, 6, (255,255,255)), (200,345))
+        game.screen.blit(self.font.render(u'PLACE', True, Colors.TITLE), (105, 349))
+        game.screen.blit(self.font.render(game.locationtext, 6, Colors.WHITE), (200, 348))
 
+        ###
+        game.screen.blit(self.font.render(u'GOLD', True, Colors.TITLE), (105, 373))
+        # game.screen.blit(self.font.render("%5s" % str(self.goldnumber), 6, Colors.WHITE), (190,372))
+        game.screen.blit(self.font.render("%5s" % str('9999'), 6, Colors.WHITE), (190, 372))
 
-    def setswordimage(self, imagefilename,r,g,b):
+        ###
+        game.screen.blit(self.font.render(u'ALMAS', True, Colors.TITLE), (246, 373))
+        # game.screen.blit(self.font.render("%17s" % str(self.almasnumber), 6, Colors.WHITE), (325, 373))
+        game.screen.blit(self.font.render("%5s" % str('99990'), 6, Colors.WHITE), (325, 373))
+
+    def drawlocationtext(self, text):
+        # ì‚¬ìš©í•˜ì§€ ì•ŠëŠ”ë“¯
+        self.screen.blit(self.font.render(text, 6, Colors.WHITE), (200, 345))
+
+    def setswordimage(self, imagefilename, r, g, b):
         self.swordimage = pygame.image.load(imagefilename).convert()
-        self.swordimage.set_colorkey((r,g,b))
+        self.swordimage.set_colorkey((r, g, b))

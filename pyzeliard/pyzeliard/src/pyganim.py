@@ -171,6 +171,9 @@ class PygAnimation(object):
         # version of the frame, it will return that one.
         return self.getFrame(self.currentFrameNum)
 
+    def setCurrentFrame(self, cfn):
+        #강제적으로 맞춰줘야할때 사용
+        self.currentFrameNum = cfn
 
     def clearTransforms(self):
         # Deletes all the transformed frames so that the animation object

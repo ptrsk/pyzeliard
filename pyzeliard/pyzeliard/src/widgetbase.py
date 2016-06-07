@@ -1,5 +1,4 @@
-
-# Copyright (C) Johan Ceuppens 2015 
+# Copyright (C) Johan Ceuppens 2015
 # Copyright (C) Johan Ceuppens 2014 
 # Copyright (C) Johan Ceuppens 2010 
 # This program is free software: you can redistribute it and/or modify
@@ -19,31 +18,34 @@
 import pygame
 from pygame.locals import *
 
+
 class WidgetBase:
     ""
-    def __init__(self, xx,yy,ww,hh, parent):
-	self.x = xx
-	self.y = yy
-	self.w = ww
-	self.h = hh
 
-	self.parent = parent
-	self.children = []
+    def __init__(self, xx, yy, ww, hh, parent):
+        self.x = xx
+        self.y = yy
+        self.w = ww
+        self.h = hh
 
-	self.yoffset = 10
+        self.parent = parent
+        self.children = []
+
+        self.yoffset = 10
 
     def addchild(self, widget):
-	self.children.append(widget)
+        self.children.append(widget)
 
     def draw(self, screen, room):
-	for w in self.children:
-		w.draw(screen,room)
+        for w in self.children:
+            w.draw(screen, room)
 
     def collide(self, xx, yy):
-	#####print "selectorx=%d selectory=%d widgetx=%d widgety=%d widgetw=%d widgeth=%d" % (xx,yy+self.yoffset,self.x,self.y,self.w,self.h)
-	print "selectorx=%d selectory=%d widgetx=%d widgety=%d widgetyw=%d widgetyh=%d" % (xx,yy+self.yoffset,self.x,self.y,self.x+self.w,self.y+self.h)
-	if (xx >= self.x and xx <= self.x + self.w and
-	yy+self.yoffset >= self.y and yy+self.yoffset <= self.y + self.h):
-		print "***collide!"
-		return self 
-	return None 
+        #####print "selectorx=%d selectory=%d widgetx=%d widgety=%d widgetw=%d widgeth=%d" % (xx,yy+self.yoffset,self.x,self.y,self.w,self.h)
+        print "selectorx=%d selectory=%d widgetx=%d widgety=%d widgetyw=%d widgetyh=%d" % (
+        xx, yy + self.yoffset, self.x, self.y, self.x + self.w, self.y + self.h)
+        if (xx >= self.x and xx <= self.x + self.w and
+                        yy + self.yoffset >= self.y and yy + self.yoffset <= self.y + self.h):
+            print "***collide!"
+            return self
+        return None

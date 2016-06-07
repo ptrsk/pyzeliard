@@ -29,4 +29,4 @@ class Box(Gameobject):
         self.hitpoints = 100000000 #FIX else wall/floor disappears
 
     def draw(self, screen, room):
-        pass	
+        pass

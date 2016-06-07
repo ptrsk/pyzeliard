@@ -23,5 +23,5 @@ from widget import *
 class WidgetBox(Widget):
     ""
     def __init__(self, xx,yy,ww,hh,parent):
-	Widget.__init__(self, xx,yy,ww,hh,parent)
+        Widget.__init__(self, xx,yy,ww,hh,parent)
 

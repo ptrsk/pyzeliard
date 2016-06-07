@@ -1,7 +1,7 @@
-
-# Copyright (C) Johan Ceuppens 2015 
-# Copyright (C) Johan Ceuppens 2014 
-# Copyright (C) Johan Ceuppens 2010 
+# -*- coding: UTF-8 -*-
+# Copyright (C) Johan Ceuppens 2015
+# Copyright (C) Johan Ceuppens 2014
+# Copyright (C) Johan Ceuppens 2010
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
@@ -25,47 +25,54 @@ from selector import *
 from maproombosquevillage import *
 from maproomadapter import *
 
+
 class MaproombankBosque(Maproombank):
-    "The bank at Bosque"
-    def __init__(self):
-	Maproombank.__init__(self)	
-	self.roomnumber = 1.3
+    """
+    The bank at Bosque
+    은행에서 메뉴 공통사항임
+    중복정의된거도있음
+    """
 
-	self.font = pygame.font.SysFont("Vera", 16)
-	box = WidgetBox(340,50,160,90,self.widgettree.widgetroot)
+    def __init__(self, screen, player, taskbar):
+        Maproombank.__init__(self)
 
-	label1 = Labelxoffset(340,50,100,14,self.font,"Go outside",box,24)
-	label2 = Labelxoffset(340,70,100,14,self.font,"Exchange Almas",box,24)
-	label3 = Labelxoffset(340,90,100,14,self.font,"Deposit Money",box,24)
-	label4 = Labelxoffset(340,110,100,14,self.font,"Withdraw Money",box,24)
-	label5 = Labelxoffset(340,130,100,14,self.font,"Check Balance",box,24)
-	box.addchild(label1)
-	label1.setcallback(self.gooutside)
-	box.addchild(label2)
-	box.addchild(label3)
-	box.addchild(label4)
-	box.addchild(label5)
-	self.selector = Selector(340,40,32,32,21,box,2)
-	box.addchild(self.selector)
+        self.roomnumber = 1.3  # 중복 입력되어있음
 
-	self.widgettree.addchild(box)
+        self.font = pygame.font.SysFont("Vera", 16)
+        box = WidgetBox(340, 50, 160, 90, self.widgettree.widgetroot)
 
-	self.locationtext = "The Bank"
+        label1 = Labelxoffset(340, 50, 100, 14, self.font, "Go outside", box, 24)
+        label2 = Labelxoffset(340, 70, 100, 14, self.font, "Exchange Almas", box, 24)
+        label3 = Labelxoffset(340, 90, 100, 14, self.font, "Deposit Money", box, 24)
+        label4 = Labelxoffset(340, 110, 100, 14, self.font, "Withdraw Money", box, 24)
+        label5 = Labelxoffset(340, 130, 100, 14, self.font, "Check Balance", box, 24)
+        box.addchild(label1)
+        label2.setcallback(self.gooutside)
+        box.addchild(label2)
+        box.addchild(label3)
+        box.addchild(label4)
+        box.addchild(label5)
+        self.selector = Selector(340, 40, 32, 32, 21, box, 2)
+        box.addchild(self.selector)
+
+        self.widgettree.addchild(box)
+
+        self.locationtext = "The Bank"  # 중복정의됨
 
     def gooutside(self, room):
-	return Maproomadapter(MaproomBosqueVillage(-588,0,2000,400))  ### NOTE : go to room 1 
-	
+        return Maproomadapter(MaproomBosqueVillage(-588, 0, 2000, 400))  ### NOTE : go to room 1
+
     def selectorup(self):
-	self.selector.moveup()	
+        self.selector.moveup()
 
     def selectordown(self):
-	self.selector.movedown()	
+        self.selector.movedown()
 
     def select(self, room):
-	w = self.selector.select(self.widgettree)
-	print "++++++++++++++++%s" % w
-	if w and w.callback:
-		return w.callback(room)
+        w = self.selector.select(self.widgettree)
+        print "++++++++++++++++%s" % w
+        if w and w.callback:
+            return w.callback(room)
 
     def fight(self, player):
-	pass	
+        pass

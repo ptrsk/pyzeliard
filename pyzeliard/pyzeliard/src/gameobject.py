@@ -25,29 +25,32 @@ from rng import *
 class Gameobject:
     "Game object"
     def __init__(self, xx,yy):
-	self.x = xx 
+        self.x = xx 
         self.y = yy
-	# default width and height 
+        # default width and height 
         self.w = 48
         self.h = 48
-        self.SCREENH = 640
-        self.SCREENW = 400
-	self.rng = RNG(self)
+        #self.SCREENH = 640 #안쓰는것같아서 닫음
+        #self.SCREENW = 400
+        self.rng = RNG(self)
      
-	self.playerimageyoffset = 15
+        self.playerimageyoffset = 15
  
     def getrng(self):
-	return self.rng
+        print "getrng - no use"
+        return self.rng
  
     def draw(self, screen, room):
+        print "draw - no use"
         screen.blit(self.image,(self.x+room.relativex,self.y+room.relativey))
 
     def hitwithplayer(self,player):
-	self.hitpoints -= self.getrng().rollplayersword(player)
-	
-    # 낙하충돌 확인
-    # 반환 : 점프중= 0 바닥에있으면= 1
+        self.hitpoints -= self.getrng().rollplayersword(player)
+
     def fallcollide(self, room, player):
+        # 낙하충돌 확인
+        # 반환 : 점프중= 0 바닥에있으면= 1
+        
         # FIX BUG
         #print("player.y" , player.y,)
         #print("room.relativey" , room.relativey) #점프시 이값만 바뀜

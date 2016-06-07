@@ -1,4 +1,4 @@
-# -*- coding: cp949 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) Johan Ceuppens 2015 
 # Copyright (C) Johan Ceuppens 2014 
 # Copyright (C) Johan Ceuppens 2010 
@@ -21,36 +21,41 @@ from pygame.locals import *
 from gameobject import *
 
 class Exit(Gameobject):
-    "Exit"
+    """
+    Exit
+    """
     
-    # xx :
-    # yy :
-    # ww :
-    # hh :
-    # xoffset :
-    # ypffset :
-    # roomnumber :
-    # locationtext : ��ġ
     def __init__(self, xx,yy,ww,hh,xoffset,yoffset,roomnumber,locationtext):
+        # xx :
+        # yy :
+        # ww :
+        # hh :
+        # xoffset : no use
+        # ypffset : no use
+        # roomnumber :
+        # locationtext : ��ġ
+
         Gameobject.__init__(self,xx,yy)
         self.w = ww
         self.h = hh
-        self.hitpoints = 100000000 #FIX else wall/floor disappears
+        #self.hitpoints = 100000000 #FIX else wall/floor disappears
 
         ### sets x and y in next room
         self.xoffset = xoffset
         self.yoffset = yoffset
         
         self.roomnumber = roomnumber
-        self.locationtext = locationtext
+        self.locationtext = locationtext # 현재는 사용하지않음
 
     def draw(self, screen, room):
         pass
 
     def exitp(self, game):
-	if (game.player.x > self.x + game.room.relativex and
-	 	game.player.x < self.x + game.room.relativex + self.w and
-		game.player.y > self.y + game.room.relativey and
-		game.player.y < self.y + game.room.relativey + self.h):
-		return 1
-	return 0
+        # 플레이어 위치가 지도에서 상대좌표 위치내에 들어가 있는가?
+        # 반환값 : 출구영역내이면 True 아니면 False
+        if (game.player.x > self.x + game.room.relativex and
+            game.player.x < self.x + game.room.relativex + self.w and
+            game.player.y > self.y + game.room.relativey and
+            game.player.y < self.y + game.room.relativey + self.h):
+            return True
+        return False

@@ -1,4 +1,4 @@
-# -*- coding: cp949 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) Johan Ceuppens 2015
 # Copyright (C) Johan Ceuppens 2011
 # This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,10 @@ import pygame
 from pygame.locals import *
 import pyganim
 
-
 import random
 from time import *
- 
+
+from color import *
 from bgoverlay import *
 from characterscreen import *
 from meter import *
@@ -39,342 +39,407 @@ from maproomcavernofmalicia import *
 
 class Game:
     "Main function"
+
     def __init__(self):
 
         """
         initialize program
         """
-        
+
         pygame.init()
         pygame.font.init()
-        
-        # set up the window
-        self.screen = pygame.display.set_mode((640, 400)) #À©µµ¿ì Å©±â ¼³Á¤ 
-        #self.screen = pygame.display.set_mode((640, 400), 0, 32) #À©µµ¿ì Å©±â ¼³Á¤
-        #self.screen = pygame.display.set_mode((800, 600)) #À©µµ¿ì Å©±â ¼³Á¤
-        # 1) È­¸é ÇØ»óµµ¸¦ 480*320À¸·Î ÃÊ±âÈ­. À©µµ¿ì ¸ğµå, ´õºí ¹öÆÛ ¸ğµå·Î ÃÊ±âÈ­ÇÏ´Â °æ¿ì
-        #self.screen = pygame.display.set_mode((480, 320), DOUBLEBUF)
-        
-        # 2) È­¸é ÇØ»óµµ¸¦ 480*320, ÀüÃ¼ È­¸é ¸ğµå, ÇÏµå¿ş¾î °¡¼Ó »ç¿ë, ´õºí ¹öÆÛ ¸ğµå·Î ÃÊ±âÈ­ÇÏ´Â °æ¿ì
-        #self.screen = pygame.display.set_mode((480, 320), FULLSCREEN | HWSURFACE | DOUBLEBUF)
 
-        pygame.display.set_caption('Zeliard') #window title
-        
-        self.font = pygame.font.SysFont("Times", 14) # Å¸ÀÓ ÆùÆ®
-        self.font2 = pygame.font.SysFont("Coutier", 28) #ÄÚ¿ìÆ¼¾î ÆùÆ®
-        self.font3 = pygame.font.SysFont("Vera", 52) #º£¶ó ÆùÆ®
-        blankimage = pygame.image.load('./pics/blank.png').convert() #°ËÀºÈ­¸é
-        titleimage = pygame.image.load('./pics/titlescreen.png').convert() # ·Î°í È­¸é 
-        gameover = False # °ÔÀÓÁ¾·á¿©ºÎ -- 0:°ÔÀÓ ¾È²÷³². 1: ³¡³²
-        
+        # set up the window
+        self.screen = pygame.display.set_mode((640, 400))  # ìœˆë„ìš° í¬ê¸° ì„¤ì •
+        # self.screen = pygame.display.set_mode((640, 400), 0, 32) #ìœˆë„ìš° í¬ê¸° ì„¤ì •
+        # self.screen = pygame.display.set_mode((800, 600)) #ìœˆë„ìš° í¬ê¸° ì„¤ì •
+        # 1) í™”ë©´ í•´ìƒë„ë¥¼ 480*320ìœ¼ë¡œ ì´ˆê¸°í™”. ìœˆë„ìš° ëª¨ë“œ, ë”ë¸” ë²„í¼ ëª¨ë“œë¡œ ì´ˆê¸°í™”í•˜ëŠ” ê²½ìš°
+        # self.screen = pygame.display.set_mode((480, 320), DOUBLEBUF)
+
+        # 2) í™”ë©´ í•´ìƒë„ë¥¼ 480*320, ì „ì²´ í™”ë©´ ëª¨ë“œ, í•˜ë“œì›¨ì–´ ê°€ì† ì‚¬ìš©, ë”ë¸” ë²„í¼ ëª¨ë“œë¡œ ì´ˆê¸°í™”í•˜ëŠ” ê²½ìš°
+        # self.screen = pygame.display.set_mode((480, 320), FULLSCREEN | HWSURFACE | DOUBLEBUF)
+
+        pygame.display.set_caption("ì ¤ë¦¬ì•„ë“œ")  # window title
+
+        # self.font = pygame.font.SysFont("Times", 14) # íƒ€ì„ í°íŠ¸
+        # self.font = pygame.font.SysFont('./fonts/NanumGothic.ttf', 14) # íƒ€ì„ í°íŠ¸
+        self.font = pygame.font.Font('./fonts/NanumBrush.ttf', 13)  # íƒ€ì„ í°íŠ¸
+        # self.font2 = pygame.font.SysFont("Coutier", 28) #ì½”ìš°í‹°ì–´, System í°íŠ¸, í•œê¸€ì´ ì•ˆëœë‹¤.
+        self.font2 = pygame.font.SysFont("Gulim2", 27)
+        self.font2 = pygame.font.Font('./fonts/NanumBrush.ttf', 27)  # íƒ€ì„ í°íŠ¸
+
+        self.font3 = pygame.font.SysFont("Vera", 52)  # ë² ë¼ í°íŠ¸
+
+        blankimage = pygame.image.load('./pics/blank.png').convert()  # ê²€ì€í™”ë©´
+        titleimage = pygame.image.load('./pics/titlescreen.png').convert()  # ë¡œê³  í™”ë©´
+        gameover = False  # ê²Œì„ì¢…ë£Œì—¬ë¶€ -- 0:ê²Œì„ ì•ˆëŠë‚¨. 1: ëë‚¨
+
         """
         run logo
-        ·Î°íÈ­¸é¶ç¿ì±â
+        ë¡œê³ í™”ë©´ë„ìš°ê¸°
         """
-        #print("·Î°íÈ­¸é")
+        # print("ë¡œê³ í™”ë©´")
         while gameover == False:
-            pygame.display.update()#È­¸é°»½Å
-            self.screen.blit(titleimage, (0,0)) #·Î°íÈ­¸é Ãâ·Â
+            pygame.display.update()  # í™”ë©´ê°±ì‹ 
+            self.screen.blit(titleimage, (0, 0))  # ë¡œê³ í™”ë©´ ì¶œë ¥
             sleep(0.01)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     return
                 elif event.type == KEYDOWN:
-                    gameover = True # ´ÙÀ½³Ñ¾î°¡±â
+                    gameover = True  # ë‹¤ìŒë„˜ì–´ê°€ê¸°
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    gameover = True # ´ÙÀ½³Ñ¾î°¡±â
+                    gameover = True  # ë‹¤ìŒë„˜ì–´ê°€ê¸°
 
         """
         initialize game
-        °ÔÀÓ ÁøÇà ÃÊ±âÈ­ 
+        ê²Œì„ ì§„í–‰ ì´ˆê¸°í™” 
         """
-        
-        #print("°ÔÀÓÁøÇàÈ­¸é")
-        self.meter = Meter() #»ı¸íÁÙ »ı¼º
-        pygame.key.set_repeat(10,100) #??? (Áö¿¬, °£°İ)
+
+        # print("ê²Œì„ì§„í–‰í™”ë©´")
+        self.meter = Meter()  # ìƒëª…ì¤„ ìƒì„±
+        pygame.key.set_repeat(10, 100)  # ??? (ì§€ì—°, ê°„ê²©)
         ####pygame.key.set_repeat(1000,1000)
 
         ## offsets for room changing
-        self.x = 0 #¹æÀ§Ä¡ 
+        self.x = 0  # ë°©ìœ„ì¹˜?
         self.y = 0
 
-        #self.player = Player(280,252)# ÇÃ·¹ÀÌ¾î À§Ä¡ (XÃà, YÃà) --È­¸é Áß¾Ó¿¡¼­ ¾ó¸¶³ª Ä¡¿ìÃÄÁ³´ÂÁö È®ÀÎ È­¸éÁß¾Ó¿¡¼­ ¸Ö¾îÁü
-        self.player = Player(280,236)# ÇÃ·¹ÀÌ¾î À§Ä¡ (XÃà, YÃà) --È­¸é Áß¾Ó¿¡¼­ ¾ó¸¶³ª Ä¡¿ìÃÄÁ³´ÂÁö È®ÀÎ È­¸éÁß¾Ó¿¡¼­ ¸Ö¾îÁü
-        #self.player = Player(280,199) #-- ÀÌ°Ç ¿ø·¡°Í
+        # self.player = Player(280,252)# í”Œë ˆì´ì–´ ìœ„ì¹˜ (Xì¶•, Yì¶•) --í™”ë©´ ì¤‘ì•™ì—ì„œ ì–¼ë§ˆë‚˜ ì¹˜ìš°ì³ì¡ŒëŠ”ì§€ í™•ì¸ í™”ë©´ì¤‘ì•™ì—ì„œ ë©€ì–´ì§
+        self.player = Player(280, 236)  # í”Œë ˆì´ì–´ ìœ„ì¹˜ (Xì¶•, Yì¶•) --í™”ë©´ ì¤‘ì•™ì—ì„œ ì–¼ë§ˆë‚˜ ì¹˜ìš°ì³ì¡ŒëŠ”ì§€ í™•ì¸ í™”ë©´ì¤‘ì•™ì—ì„œ ë©€ì–´ì§
+        # self.player = Player(280,199) #-- ì´ê±´ ì›ë˜ê²ƒ
 
-        # ¸¶À» ·Îµù
-        self.room = MaproomBosqueVillage(-700,0,3312,288) #ÇöÀç´Â º¸½ºÅ©¸¶À» µî·Ï xÃà, yÃà, °¡·ÎÅ©±â, ¼¼·ÎÅ©±â
-        #self.room = MaproomBosqueVillage(-700,0,2000,400) #ÇöÀç´Â º¸½ºÅ©¸¶À» µî·Ï
+        # ë§ˆì„ ë¡œë”©
+        self.room = MaproomBosqueVillage(-700, 0, 3312, 288)  # í˜„ì¬ëŠ” ë³´ìŠ¤í¬ë§ˆì„ ë“±ë¡ xì¶•, yì¶•, ê°€ë¡œí¬ê¸°, ì„¸ë¡œí¬ê¸°
+        #  self.room = MaproomBosqueVillage(-700, 0)  # í˜„ì¬ëŠ” ë³´ìŠ¤í¬ë§ˆì„ ë“±ë¡ xì¶•, yì¶•, ê°€ë¡œí¬ê¸°, ì„¸ë¡œí¬ê¸°
+        # self.room = MaproomBosqueVillage(-700,0,2000,400) #í˜„ì¬ëŠ” ë³´ìŠ¤í¬ë§ˆì„ ë“±ë¡
         ###self.room = MaproomCavernofMalicia(0,0,2000,400)
         ###self.room = MaproomweaponstoreBosque()
         ###self.room = MaproomfortunetellerBosque()
-        ###self.room = MaproombankBosque()
+        #self.room = MaproombankBosque()
 
 
-        self.locationtext = self.room.locationtext # ¹æÀÌ¸§ ÀÔ·Â
-        self.roomnumber = self.room.roomnumber #¹æ¹øÈ£ ÀÔ·Â 
- 
-        self.bgoverlay = BGOverlay(0,0) # Àü¸é¹è°æ °æ°è¸é
-        self.taskbar = Taskbar(self.screen, self.font2, self.player) # ÀÛ¾÷Ç¥½ÃÁÙ º¸ÀÌ±â. screen, font, player
-        self.characterscreen = CharacterScreen(self.font) # ÀÎº¥Åä¸®Ã¢
+        self.locationtext = self.room.locationtext  # ë°©ì´ë¦„ ì…ë ¥
+        self.roomnumber = self.room.roomnumber  # ë°©ë²ˆí˜¸ ì…ë ¥
 
-        #gameflag = 0 # ¾È¾²ÀÓ. ¾Æ¹«·¡µµ gameoverÀÇ ¿ÀÅ¸ÀÎµí.
+        self.bgoverlay = BGOverlay(0, 0)  # ì „ë©´ë°°ê²½ ê²½ê³„ë©´ (0,0)<-- no use
+        self.taskbar = Taskbar(self.screen, self.font2, self.player)  # ì‘ì—…í‘œì‹œì¤„ ë³´ì´ê¸°. screen, font, player
+        self.characterscreen = CharacterScreen(self.font)  # ì¸ë²¤í† ë¦¬ì°½
 
-        #print("ÇÁ·Î±×·¥ Á¾·á")
-        #os.system("pause")
-        #sys.exit()
+        # gameflag = 0 # ì•ˆì“°ì„. ì•„ë¬´ë˜ë„ gameoverì˜ ì˜¤íƒ€ì¸ë“¯.
+
+        # print("í”„ë¡œê·¸ë¨ ì¢…ë£Œ")
+        # os.system("pause")
+        # sys.exit()
 
         ######################
-        # °ÔÀÓ ÁøÇà : ½ÃÀÛ
-        ######################        
-        gameover = False # °ÔÀÓÁ¾·á¿©ºÎ -- 0: ÁøÇàÁß 1: Á¾·á
+        # í‚¤ë³´ë“œì…ë ¥
+        ######################
+        player_run = False
+        gameover = False  # ê²Œì„ì¢…ë£Œì—¬ë¶€ -- 0: ì§„í–‰ì¤‘ 1: ì¢…ë£Œ
+
         while gameover == False:
-            self.player.h = 72 # NOTE: for ducking, FIXME 48
+            self.player.h = 72  # NOTE: for ducking, FIXME 48
             sleep(0.01)
-            
+
             for event in pygame.event.get():
-                if event.type == QUIT: # X¹öÆ°
-                    print("x:Á¾·á")
+                if event.type == QUIT:  # Xë²„íŠ¼
+                    print("x:ì¢…ë£Œ")
                     return
                 elif event.type == KEYDOWN:
-                    #print("Å°´­¸²")
                     self.keydown = 1
                     # self.player 1 key controls
-                    
+
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+
+                    if event.key in (K_LSHIFT, K_RSHIFT):
+                        # NOTE : ì›ë³¸ëŒ€ë¡œí•˜ë©´ ë‚˜ì¤‘ì—” ë˜ì „ì—ì„œë§Œ ë‹¬ë¦¬ê²Œ í• ê²ƒ
+                        # ì‰¬í”„íŠ¸ ëˆ„ë¥´ë©´ ë‹¬ë¦¬ê¸° ë‚˜ì¤‘ì—” ì‰¬í”„íŠ¸ ëº„ê²ƒ
+                        # ì‰¬í”„íŠ¸ ëˆ„ë¥´ê³  ìˆìœ¼ë©´ ê³„ì† ìœ ì§€ë˜ê²Œ.
+                        player_run = True
+
                     if event.key == K_x:
-                        print("x:´ëÈ­")
-                        self.talker = self.player.talk(self) # Todo: ¿À·ù³².
-                    elif event.key == K_z: #Z¹öÆ° Å¬¸¯½Ã °ø°İ
-                        print("z:°ø°İ")
+                        print("x:ëŒ€í™”")
+                        self.talker = self.player.talk(self)  # Todo: ì˜¤ë¥˜ë‚¨.
+                    elif event.key == K_z:  # Zë²„íŠ¼ í´ë¦­ì‹œ ê³µê²© - ì›ë˜ëŠ” ìŠ¤í˜ì´ìŠ¤ì„
+                        print("z:ê³µê²©")
+                        self.player.state = self.player.STATE_ATACKING
                         if self.player.fightcounter == 0:
-                            self.player.fight(self.room,self.player,self.taskbar.sword)
+                            self.player.fight(self.room, self.player, self.taskbar.sword)
                             self.player.fightcounter = 10
-                    elif event.key == K_c: #c¸¶¹ı½ÃÀü
-                        print("c:¸¶¹ı½ÃÀü")
+                    elif event.key == K_c:  # cë§ˆë²•ì‹œì „
+                        print("c:ë§ˆë²•ì‹œì „")
                         self.player.cast(self)
                     elif event.key == K_p:
-                        print("p:ÆÄ¿ö?")
+                        print("p:íŒŒì›Œ?")
                         self.player.deitypower(self)
                     elif event.key == K_i:
                         ###########################
-                        # ÀÎº¥Ã¢ Ã³¸®
-                        # Todo: ¸¶¿ì½º¿¡µµ °è¼ÓÇØ¼­ È­¸éÀÌ °»½ÅµÈ´Ù. ¸¶¿ì½º´Â ¾ÈµÇ°Ô ÇÒ°Í
+                        # ì¸ë²¤ì°½ ì²˜ë¦¬
+                        # Todo: ë§ˆìš°ìŠ¤ì—ë„ ê³„ì†í•´ì„œ í™”ë©´ì´ ê°±ì‹ ëœë‹¤. ë§ˆìš°ìŠ¤ëŠ” ì•ˆë˜ê²Œ í• ê²ƒ
                         ###########################
                         self.charscreenover = False
                         while self.charscreenover == False:
                             sleep(0.01)
                             for event in pygame.event.get():
-                                if event.type == QUIT: # Ã¢´İÀ»¶§.
-                                    print("Ã¢´İ±â °ÔÀÓÀÌ Á¾·áµÊ")
+                                if event.type == QUIT:  # ì°½ë‹«ì„ë•Œ.
+                                    print("ì°½ë‹«ê¸° ê²Œì„ì´ ì¢…ë£Œë¨")
                                     return
                                 elif event.type == KEYDOWN:
                                     self.keydown = 1
-                                    print("Å°º¸µå ´­¸²")
+                                    print("í‚¤ë³´ë“œ ëˆŒë¦¼")
                                     if event.key == K_ESCAPE or event.key == K_i:
-                                        print("I ¶Ç´Â ESC´­¸² ÀÎº¥Åä¸®Ã¢ ´İ±â")
+                                        print("I ë˜ëŠ” ESCëˆŒë¦¼ ì¸ë²¤í† ë¦¬ì°½ ë‹«ê¸°")
                                         self.charscreenover = True
-                                        
-                                #°¢Á¾Ã¢µé°»½Å
-                                self.characterscreen.draw(self) #ÀÎº¥Ã¢ °»½Å
-                                self.taskbar.draw(self) #ÀÛ¾÷Ã¢ °»½Å
-                                self.bgoverlay.draw(self.screen) #¹è°æÃ¢ °»½Å
-                                self.meter.draw(self.screen) #»ı¸íÇ¥½ÃÁÙ °»½Å
+
+                                # ê°ì¢…ì°½ë“¤ê°±ì‹ 
+                                self.characterscreen.draw(self)  # ì¸ë²¤ì°½ ê°±ì‹ 
+                                self.taskbar.draw(self)  # ì‘ì—…ì°½ ê°±ì‹ 
+                                self.bgoverlay.draw(self.screen)  # ë°°ê²½ì°½ ê°±ì‹ 
+                                self.meter.draw(self.screen)  # ìƒëª…í‘œì‹œì¤„ ê°±ì‹ 
                                 pygame.display.update();
-                                print("i:ÀÎº¥Åä¸®->¿­¸²->ESC¶Ç´Â IÅ°º¸µå ´­¸²")
+                                print("i:ì¸ë²¤í† ë¦¬->ì—´ë¦¼->ESCë˜ëŠ” Ií‚¤ë³´ë“œ ëˆŒë¦¼")
                                 ###self.screen.blit(blankimage, (0,0))
 
                     elif event.key == K_DOWN:
                         self.keydown = 2
-                        print("Å°´Ù¿î")
+                        print("í‚¤ë‹¤ìš´")
 
-                        #FIXME keydown = 2
-                        #self.room.moveup()    
+                        # FIXME keydown = 2
+                        # self.room.moveup()
                     elif event.key == K_RIGHT:
-                        self.room.moveright() # ¸¶À»À» ÀÌµ¿½ÃÅ°±â
+                        self.room.moveright()  # ë§ˆì„ì„ ì´ë™ì‹œí‚¤ê¸°
                         self.room.direction = "left"
-                        self.player.direction = self.player.RIGHT 
-                        self.player.state = self.player.STATE_WALK
-                        
-                        ##print("¸¶À» ¿ŞÂÊÀÌµ¿,ÇÃ·¹ÀÌ¾î ¿À¸¥ÂÊ´Ş¸®±â")
-                        #print(self.player.x, self.player.y) #Ä³¸¯ÅÍ´Â Ç×»ó Áß¾Ó¿¡ ÀÖ´Ù. ±×·¡¼­ ¹Ù²îÁö¾ÊÀ½.
-                        #print(self.room.relativey, self.room.relativex)
-                        
+                        self.player.direction = self.player.RIGHT
+
+                        if player_run:
+                            self.player.state = self.player.STATE_RUNNING
+                        else:
+                            self.player.state = self.player.STATE_WALKING
+
+                            # print(self.player.x, self.player.y) #ìºë¦­í„°ëŠ” í•­ìƒ ì¤‘ì•™ì— ìˆë‹¤. ê·¸ë˜ì„œ ë°”ë€Œì§€ì•ŠìŒ.
+                            # print(self.room.relativey, self.room.relativex)
+
                     elif event.key == K_LEFT:
                         self.room.moveleft()
                         self.room.direction = "right"
                         self.player.direction = self.player.LEFT
-                        self.player.state = self.player.STATE_WALK
-                         
-                        #print("¸¶À»¿À¸¥ÂÊÀÌµ¿,ÇÃ·¹ÀÌ¾î ¿ŞÂÊ´Ş¸®±â")
-                        #print(self.room.relativey, self.room.relativex)
-                        #print(self.x,self.y) ÀÌ°Ç¾Æ´Ï´Ù.
-                         
+
+                        if player_run:
+                            self.player.state = self.player.STATE_RUNNING
+                        else:
+                            self.player.state = self.player.STATE_WALKING
+
+                            # print self.player.state
+                            # self.player.state = self.player.STATE_WALK
+
+                            # print("ë§ˆì„ì˜¤ë¥¸ìª½ì´ë™,í”Œë ˆì´ì–´ ì™¼ìª½ë‹¬ë¦¬ê¸°")
+                            # print(self.room.relativey, self.room.relativex)
+                            # print(self.x,self.y) ì´ê±´ì•„ë‹ˆë‹¤.
+
                     elif event.key == K_UP:
                         self.locationtext = self.room.exit(self)
-                        self.chooseroom(self.locationtext, self.font) #Á¡ÇÁÇÑµ¥°¡ È¤½Ã ¹®À¸·Î µé¾î°¡´Â°÷ÀÎ°¡?
-                        #print"Á¡ÇÁ ", self.locationtext #µÚ¿¡²« ¾ÈÂïÈùµí
+                        print "ë¡œì¼€ì´ì…˜í…ìŠ¤íŠ¸: ", self.locationtext
+                        self.chooseroom(self.locationtext, self.font)  # ì í”„í•œë°ê°€ í˜¹ì‹œ ë¬¸ìœ¼ë¡œ ë“¤ì–´ê°€ëŠ”ê³³ì¸ê°€?
+                        # print"ì í”„ ", self.locationtext #ë’¤ì—ê»€ ì•ˆì°íŒë“¯
 
                         ########################################
-                        # Á¡ÇÁÇß´Âµ¥ ·ÎÇÁ°¡ÀÖÀ»¶§ -> ·ÎÇÁ¸¦ Å½
+                        # ì í”„í–ˆëŠ”ë° ë¡œí”„ê°€ìˆì„ë•Œ -> ë¡œí”„ë¥¼ íƒ
                         ########################################
                         if self.room.collideropes(self.player):
-                                #print "Collision with Rope"
-                                print"·ÎÇÁ¿¡ Á¢ÃË"
-                                climbingover = 0
-                                while climbingover == 0:
-                                    sleep(0.01)
-                                    for event in pygame.event.get():
-                                        if event.type == QUIT:
-                                            return
-                                        elif event.type == KEYDOWN:
-                                            self.keydown = 1
-                                            # self.player 1 key controls
-                                            if event.key == K_RIGHT:
-                                                self.room.moveright()
-                                                self.room.direction = "left"
-                                                self.player.direction = self.player.RIGHT 
-                                                if not self.room.collideropes(self.player):
-                                                    climbingover = 1
-                                            elif event.key == K_LEFT:
-                                                self.room.moveleft()
-                                                self.room.direction = "right"
-                                                self.player.direction = self.player.LEFT 
-                                                if not self.room.collideropes(self.player):
-                                                    climbingover = 1
-                                            elif event.key == K_UP: 
-                                                self.room.moveup()
-                                                if not self.room.collideropes(self.player):
-                                                    climbingover = 1
-                                            elif event.key == K_DOWN:
-                                                self.room.movedown()
-                                                if not self.room.collideropes(self.player):
-                                                    climbingover = 1
-                                                    
-                                                    
-                                        self.room.update(self.player)
-                                        self.room.draw(self.screen,self.player,self.taskbar)
-                                        self.taskbar.draw(self)
-                                        self.player.update(self.room)
-                                        self.player.drawclimbing(self.screen,self.room)
-                                        self.bgoverlay.draw(self.screen)
-                                        self.meter.draw(self.screen)
+                            # print "Collision with Rope"
+                            print"ë¡œí”„ì— ì ‘ì´‰"
+                            climbingover = 0
+                            while climbingover == 0:
+                                sleep(0.01)
+                                for event in pygame.event.get():
+                                    if event.type == QUIT:
+                                        return
+                                    elif event.type == KEYDOWN:
+                                        self.keydown = 1
+                                        # self.player 1 key controls
+                                        if event.key == K_RIGHT:
+                                            self.room.moveright()
+                                            self.room.direction = "left"
+                                            self.player.direction = self.player.RIGHT
+                                            if not self.room.collideropes(self.player):
+                                                climbingover = 1
+                                        elif event.key == K_LEFT:
+                                            self.room.moveleft()
+                                            self.room.direction = "right"
+                                            self.player.direction = self.player.LEFT
+                                            if not self.room.collideropes(self.player):
+                                                climbingover = 1
+                                        elif event.key == K_UP:
+                                            self.room.moveup()
+                                            if not self.room.collideropes(self.player):
+                                                climbingover = 1
+                                        elif event.key == K_DOWN:
+                                            self.room.movedown()
+                                            if not self.room.collideropes(self.player):
+                                                climbingover = 1
 
-                                        pygame.display.update()
-                                        self.screen.blit(blankimage, (0,0))
-                                        
+                                    self.room.update(self.player)
+                                    self.room.draw(self.screen, self.player, self.taskbar)
+                                    self.taskbar.draw(self)
+                                    self.player.update(self.room)
+                                    self.player.drawclimbing(self.screen, self.room)
+                                    self.bgoverlay.draw(self.screen)
+                                    self.meter.draw(self.screen)
+
+                                    pygame.display.update()
+                                    self.screen.blit(blankimage, (0, 0))
+
 
                         ########################################
-                        # Á¡ÇÁÇß´Âµ¥ ·ÎÇÁ°¡¾øÀ»¶§ -> ±×³ÉÁ¡ÇÁ
+                        # ì í”„í–ˆëŠ”ë° ë¡œí”„ê°€ì—†ì„ë•Œ -> ê·¸ëƒ¥ì í”„
                         ########################################
                         ####if self.roomnumber == 0:
-                        elif self.room.fall(self.player) == 2: #Ä³¸¯ÅÍ°¡ ¶¥À» ¹â°íÀÖ´Ù¸é..
-                            print "Á¡ÇÁ"                            
-                            self.player.jump(self.room) # Á¡ÇÁÇÔ #¹ö±×: ¶¥À» ¾È¹â¾Æµµ Á¡ÇÁµÊ
-                            #sys.exit()
-                            #sleep(1)
+                        elif self.room.fall(self.player) == 2:  # ìºë¦­í„°ê°€ ë•…ì„ ë°Ÿê³ ìˆë‹¤ë©´..
+                            print "ì í”„"
+                            self.player.jump(self.room)  # ì í”„í•¨ #ë²„ê·¸: ë•…ì„ ì•ˆë°Ÿì•„ë„ ì í”„ë¨
+                            # sys.exit()
+                            # sleep(1)
 
                 elif event.type == KEYUP:
                     """
-                    Å°°¡ ¶¼ÀÌ¸é ±×³É ¼­ÀÖ´Â ÀÚ¼¼ÀÌ¾î¾ßÇÔ
+                    í‚¤ê°€ ë–¼ì´ë©´ 
                     """
-                    self.player.state = self.player.STATE_STAND
-                    
+                    self.player.state = self.player.STATE_STANDING  # ê·¸ëƒ¥ ì„œìˆëŠ” ìì„¸ì´ì–´ì•¼í•¨
+                    player_run = False  # ë‹¬ë¦¬ê¸° ìƒíƒœì •ì§€
 
             if self.room.collide(self.player) == 1 or self.player.hitpoints <= 0:
                 print "game over!"
                 exit
-            
-            #===================================================================
-            # °øÅë»çÇ×
-            #===================================================================
-            #print "Á¡ÇÁ", self.player.jumpcounter
-            self.room.update(self.player) # Áö±İÀº ¾Æ¹«ÀÛµ¿¾ÈÇÔ
-            self.room.fall(self.player) # Áß·Â»óÅÂ À¯Áö
-            self.room.draw(self.screen,self.player,self.taskbar)
-            self.taskbar.draw(self) #»óÅÂÃ¢ ±×¸®±â
-            self.meter.draw(self.screen) # »ı¸íÁÙ ±×¸®±â
-            self.player.update(self.room) # Á¡ÇÁÁßÃ³¸®
-            self.player.draw(self.screen,self.room)
-            self.bgoverlay.draw(self.screen) # ¹è°æÀÌ¹ÌÁö Ã³¸®
-            
+
+            # ===================================================================
+            # ê³µí†µì‚¬í•­
+            # ===================================================================
+            # print "ì í”„", self.player.jumpcounter
+            self.room.update(self.player)  # ì§€ê¸ˆì€ ì•„ë¬´ì‘ë™ì•ˆí•¨
+            self.room.fall(self.player)  # ì¤‘ë ¥ìƒíƒœ ìœ ì§€
+            self.room.draw(self.screen, self.player, self.taskbar)
+
+            # NOTE : ë§ˆì„ì—ì„œëŠ” ê³„ì† ìƒíƒœì°½ì„ ê·¸ë¦¬ëŠ”ê²Œ ê³¼ë¶€í•˜ ê±¸ë¦´ìˆ˜ìˆì„ë“¯.
+            self.taskbar.draw(self)  # ìƒíƒœì°½ ê·¸ë¦¬ê¸°
+            self.meter.draw(self.screen)  # ìƒëª…ì¤„ ê·¸ë¦¬ê¸°
+            self.player.update(self.room)  # ì í”„ì¤‘ì²˜ë¦¬
+            self.player.draw(self.screen, self.room)
+            self.bgoverlay.draw(self.screen)  # ë°°ê²½ì´ë¯¸ì§€ ì²˜ë¦¬
+
             pygame.display.update()
-            self.screen.blit(blankimage, (0,0))
-            #print "»óÅÂ" , self.player.state
+            self.screen.blit(blankimage, (0, 0))
 
-
-    # Áö±İÀº ¾È¾²´Âµí            
-    def setxy(self,xx,yy):
+    # ì§€ê¸ˆì€ ì•ˆì“°ëŠ”ë“¯            
+    def setxy(self, xx, yy):
         self.x = xx
         self.y = yy
 
-    # Áö±İÀº ¾È¾²´Âµí
-    def setplayerxy(self,xx,yy):
+    # ì§€ê¸ˆì€ ì•ˆì“°ëŠ”ë“¯
+    def setplayerxy(self, xx, yy):
         self.player.x = xx
         self.player.y = yy
 
-    # ¼±ÅÃµÈ¹æ
+    # ì„ íƒëœë°©
     # NOTE: set x y in maproom1 and Game() will set it with game.x (self.x) etc. 
     def chooseroom(self, locationtext, font):
+        # self :
+        # locationtext :
+        # font : no use
         if (self.locationtext == ""):
             return
         # Moon woods
         elif (self.locationtext == "Bosque"):
-            #===================================================================
-            # ½£(½ºÆäÀÎ¾î) ¸¶À» 
-            #===================================================================
+            # ===================================================================
+            # ìˆ²(ìŠ¤í˜ì¸ì–´) ë§ˆì„ 
+            # ===================================================================
             self.talker = None
-            self.room = MaproomBosqueVillage(self.x,self.y,2000,400)
+            self.room = MaproomBosqueVillage(self.x, self.y, 2000, 400)
         elif (self.locationtext == "Cavern of Malicia"):
-            #===================================================================
-            # ¿øÇÑ(½ºÆäÀÎ¾î)ÀÇ µ¿±¼ 
-            #===================================================================
+            # ===================================================================
+            # ì›í•œ(ìŠ¤í˜ì¸ì–´)ì˜ ë™êµ´ 
+            # ===================================================================
             self.talker = None
-            self.room = MaproomCavernofMalicia(self.x,self.y,2000,2000)
-        elif (self.locationtext == "Weapon and Armour shop"):
-            #===================================================================
-            # ¹«±âÁ¦ÀÛ¼Ò µé¾î°¥¶§ 
-            #===================================================================
-            if self.roomnumber == 1.1:
+            self.room = MaproomCavernofMalicia(self.x, self.y, 2000, 2000)
+        elif (self.locationtext == "The Bank"):
+            print "ì€í–‰"
+            if self.roomnumber == 1.1: #TODO : 1.1ì€ ë¬´ì—‡ì„ ì˜ë¯¸í•˜ëŠ”ê±´ê°€?
                 # FIXME pack store
                 1
-            self.room = MaproomweaponstoreBosque()
-            print("¹«±âÁ¦ÀÛ¼Ò")
-            
+            self.room = MaproombankBosque(self.screen, self.player, self.taskbar)
+
+
             gameover = False
             while gameover == False:
+                self.room.update(self.player)  # ì§€ê¸ˆì€ ì•„ë¬´ì‘ë™ì•ˆí•¨
+                # self.room.fall(self.player)  # ì¤‘ë ¥ìƒíƒœ ìœ ì§€
+                self.room.draw(self.screen, self.player, self.taskbar)
+
+                pygame.display.update()
+
                 sleep(0.01)
                 for event in pygame.event.get():
                     if event.type == QUIT:
-                        print("¹«±â¼ÒÁ¾·á")
+                        print("ë¬´ê¸°ì†Œì¢…ë£Œ")
                         return
                     elif event.type == KEYDOWN:
                         self.keydown = 1
-                        print("¹«±â¼ÒÅ°´Ù¿î1")
+                        print("ë¬´ê¸°ì†Œí‚¤ë‹¤ìš´1")
                         # self.player 1 key controls
                         if event.key == K_UP:
-                            print("¹«±â¼ÒÅ°¾÷")
+                            print("ë¬´ê¸°ì†Œí‚¤ì—…")
                             self.room.selectorup()
                         elif event.key == K_DOWN:
-                            print("¹«±â¼ÒÅ°´Ù¿î2")
+                            print("ë¬´ê¸°ì†Œí‚¤ë‹¤ìš´2")
                             self.room.selectordown()
                         elif event.key == K_z:
                             self.adapter = self.room.select(self.room)
                             self.manipulateroom(self.adapter)
-                            print("¹«±â¼ÒZÅ°"); 
+                            print("ë¬´ê¸°ì†ŒZí‚¤");
                             gameover = True
 
-                self.room.draw(self.screen,self.player,self.taskbar)
+        elif (self.locationtext == "Weapon and Armour shop"):
+            if self.roomnumber == 1.1:
+                # FIXME pack store
+                1
+            self.room = MaproomweaponstoreBosque()
+            gameover = False
+            while gameover == False:
+                sleep(0.01)
+                for event in pygame.event.get():
+                    if event.type == QUIT:
+                        print("ë¬´ê¸°ì†Œì¢…ë£Œ")
+                        return
+                    elif event.type == KEYDOWN:
+                        self.keydown = 1
+                        print("ë¬´ê¸°ì†Œí‚¤ë‹¤ìš´1")
+                        # self.player 1 key controls
+                        if event.key == K_UP:
+                            print("ë¬´ê¸°ì†Œí‚¤ì—…")
+                            self.room.selectorup()
+                        elif event.key == K_DOWN:
+                            print("ë¬´ê¸°ì†Œí‚¤ë‹¤ìš´2")
+                            self.room.selectordown()
+                        elif event.key == K_z:
+                            self.adapter = self.room.select(self.room)
+                            self.manipulateroom(self.adapter)
+                            print("ë¬´ê¸°ì†ŒZí‚¤");
+                            gameover = True
+
+                self.room.draw(self.screen, self.player, self.taskbar)
                 self.taskbar.draw(self)
                 self.meter.draw(self.screen)
                 pygame.display.update()
         elif (self.locationtext == "The Sage Marid"):
-            #===================================================================
-            # ÇöÀÚÀÇ Áı
-            #===================================================================
+            # ===================================================================
+            # í˜„ìì˜ ì§‘
+            # ===================================================================
             if self.roomnumber == 1.2:
                 # FIXME pack store
                 1
-            self.room = MaproomfortunetellerBosque()	
+            self.room = MaproomfortunetellerBosque()
             gameover = False
             while gameover == False:
                 sleep(0.01)
@@ -385,28 +450,29 @@ class Game:
                         self.keydown = 1
                         # self.player 1 key controls
                         if event.key == K_UP:
-                            self.room.selectorup(); 
-                            print("Å°¾÷")
+                            self.room.selectorup();
+                            print("í‚¤ì—…")
                         elif event.key == K_DOWN:
-                            self.room.selectordown(); 
-                            print("Å°´Ù¿î")	
+                            self.room.selectordown();
+                            print("í‚¤ë‹¤ìš´")
                         elif event.key == K_z:
                             self.adapter = self.room.select(self.room)
                             self.manipulateroom(self.adapter)
                             gameover = True
 
-                self.room.draw(self.screen,self.player,self.taskbar)
+                self.room.draw(self.screen, self.player, self.taskbar)
                 self.taskbar.draw(self)
                 self.meter.draw(self.screen)
                 pygame.display.update()
 
-    # ¸ŞÀÎÈ­¸é?
+    # ë©”ì¸í™”ë©´?
     def manipulateroom(self, adapter):
-        print("¹«½¼ÇÔ¼ö?")
+        print("ë¬´ìŠ¨í•¨ìˆ˜?")
         if adapter and adapter.room:
             self.room = adapter.room
 
-# ÆÄÀÏÀÌ ÀÎÅÍÇÁ¸®ÅÍ¿¡ ÀÇÇØ¼­ ½ÇÇàµÇ´Â °æ¿ì¶ó¸é
+
+# íŒŒì¼ì´ ì¸í„°í”„ë¦¬í„°ì— ì˜í•´ì„œ ì‹¤í–‰ë˜ëŠ” ê²½ìš°ë¼ë©´
 if __name__ == "__main__":
-    print("ÀÎÅÍÇÁ¸®ÅÍ¿¡¼­ ½ÇÇà ")
+    print("ì¸í„°í”„ë¦¬í„°ì—ì„œ ì‹¤í–‰ ")
     foo = Game()

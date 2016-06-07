@@ -1,5 +1,4 @@
-
-# Copyright (C) Johan Ceuppens 2015 
+# Copyright (C) Johan Ceuppens 2015
 # Copyright (C) Johan Ceuppens 2014 
 # Copyright (C) Johan Ceuppens 2010 
 # This program is free software: you can redistribute it and/or modify
@@ -20,32 +19,34 @@ import pygame
 from pygame.locals import *
 from widgetbase import *
 
+
 class Widget(WidgetBase):
     ""
-    def __init__(self, xx,yy,ww,hh, parent):
-	WidgetBase.__init__(self,xx,yy,ww,hh,parent)
-	self.callback = None
-	self.r = None
+
+    def __init__(self, xx, yy, ww, hh, parent):
+        WidgetBase.__init__(self, xx, yy, ww, hh, parent)
+        self.callback = None
+        self.r = None
 
     def enter(self, selector):
-	###print "---%s" % self
+        ###print "---%s" % self
 
-	self.enterrec(selector)
-	print "***********%s" % self.r
-	return self.r
-	
+        self.enterrec(selector)
+        print "***********%s" % self.r
+        return self.r
+
     def enterrec(self, selector):
-	###print "---%s" % self
-	if self.collide(selector.x, selector.y) != selector:
-		###print "**collide and self.children=%s" % len(self.children)
-		if len(self.children) == 0:
-			if self.r == None: 
-				self.r = self
-				###print "---------------------->set return val = %s" % self.r
-					
-		else:
-			for w in self.children:
-				w.enterrec(selector)	
-	
+        ###print "---%s" % self
+        if self.collide(selector.x, selector.y) != selector:
+            ###print "**collide and self.children=%s" % len(self.children)
+            if len(self.children) == 0:
+                if self.r == None:
+                    self.r = self
+                ###print "---------------------->set return val = %s" % self.r
+
+            else:
+                for w in self.children:
+                    w.enterrec(selector)
+
     def setcallback(self, callback):
-	self.callback = callback
+        self.callback = callback

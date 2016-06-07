@@ -1,4 +1,4 @@
-
+# -*- coding: UTF-8 -*-
 # Copyright (C) Johan Ceuppens 2015 
 # Copyright (C) Johan Ceuppens 2014 
 # Copyright (C) Johan Ceuppens 2010 
@@ -18,15 +18,39 @@
 
 import pygame
 from pygame.locals import *
+import pyganim
 from maproomstore import *
-
+import color
 class Maproombank(Maproomstore):
-    "Store"
+    """
+        Store
+        은행 공통사항 - 여기서는 화면출력은 하지않는듯.
+    """
     def __init__(self):
-	Maproomstore.__init__(self)	
-	self.bgimage = pygame.image.load('./pics/bg-bank-1.png')
-	self.locationtext = "The Bank"
-	self.roomnumber = 1.3
+        Maproomstore.__init__(self)
+        self.bgimage = pygame.image.load('./pics/bg-bank-1.png') # 은행원 얼굴
+        self.locationtext = "The Bank"
+        self.roomnumber = 1.3
+
+        animTypes = 'work_write'.split()  # 현재 존재하는 그림만 추가할것
+        self.animObjs = {}
+
+        for animType in animTypes:
+            imagesAndDurations = [('./images/bank/banker_%s_%s.bmp' % (animType, str(num).rjust(3, '0')), 0.09) for num in
+                                  range(6)]
+            self.animObjs[animType] = pyganim.PygAnimation(imagesAndDurations)  # 이미지 불러오기
+
+    #def draw(self, screen, player, taskbar):
+        """
+            overriding
+        """
+        #self.animObjs['work_write'].blit(screen, (self.x, self.y))
+
+        #pygame.draw.rect(screen, color.Colors.WHITE, (120, 100, 640, 300))
+
 
     def fight(self, player):
-	pass	
+        """
+            overriding
+        """
+        pass
